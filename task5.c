@@ -4,13 +4,43 @@
 #include "simpletools.h"
 #include "abdrive.h"
 #include "ping.h"
+#include "simulator.h"
 
 static int LEFT = 0, RIGHT = 1;
 static double leftDistanceToWall;
 static double rightDistanceToWall;
-int STOP_DIST = 10;
+int STOP_DIST = 20;
 int prevLeftIntegral, prevRightIntegral = 0;
 int prevLeftError, prevRightError = 0;
+
+struct Element* linkList = NULL;
+
+struct Element {
+  int data;
+  struct Element *next;
+};
+
+void append(struct Element** head_ref, int new_data) {
+    /* 1. allocate node */
+    struct Element* new_node = (struct Element*) malloc(sizeof(struct Element));
+    struct Element *last = *head_ref;  /* used in step 5*/
+    /* 2. put in the data  */
+    new_node->data  = new_data;
+    /* 3. This new node is going to be the last node, so make next of
+          it as NULL*/
+    new_node->next = NULL;
+    /* 4. If the Linked List is empty, then make the new node as head */
+    if (*head_ref == NULL) {
+       *head_ref = new_node;
+       return;
+    }
+    /* 5. Else traverse till the last node */
+    while (last->next != NULL)
+        last = last->next;
+    /* 6. Change the next of last node */
+    last->next = new_node;
+    return;
+}
 
 int getDistanceFromWall(int wall) {
   low(26);
@@ -59,15 +89,9 @@ int getDistanceError(int distance, int wall) {
 }
 
 double proportional(int error){
-  double kp = 3.99;
+  double kp = 2.5;
   double output = kp * error;
   return output;
-}
-
-double integral(int error, int prevIntegral){
-  double ki = 1.19;
-  double integral = ki * (prevIntegral + error);
-  return integral;
 }
 
 int derivative(int error, int prevError){
@@ -76,9 +100,37 @@ int derivative(int error, int prevError){
   return derivative;
 }
 
+void push(struct Element** head_ref, int new_data)
+{
+    /* 1. allocate node */
+    struct Element* new_node = (struct Element*) malloc(sizeof(struct Element));
+    /* 2. put in the data  */
+    new_node->data  = new_data;
+    /* 3. Make next of new node as head */
+    new_node->next = (*head_ref);
+    /* 4. move the head to point to the new node */
+    (*head_ref)    = new_node;
+}
+
+void drive(left, right) {
+  drive_goto(left, right);
+  append(&linkList, left);
+  append(&linkList, right);
+}
+
+void printList(struct Element *node)
+{
+  while (node != NULL)
+  {
+     printf(" %d ", node->data);
+     node = node->next;
+  }
+}
+
 int main() {
   averageStartingDistances();
   int dist = ping_cm(8);
+  simulator_startNewSmokeTrail();
   while (dist > STOP_DIST) {
     dist = ping_cm(8);
 
@@ -88,8 +140,6 @@ int main() {
 
     double leftPSignal = proportional(leftError);
     double rightPSignal = proportional(rightError);
-    double leftISignal = integral(leftError, prevLeftIntegral);
-    double rightISignal = integral(rightError, prevRightIntegral);
     double leftDSignal = derivative(leftError, prevLeftError);
     double rightDSignal = derivative(rightError, prevRightError);
 
@@ -100,21 +150,32 @@ int main() {
 
     if (control > 0) {
       /* turn left */
-      drive_goto(0,control);
-      drive_goto(10,10);
+      drive(0,control);
     } else {
       // turn right
-      drive_goto(fabs(control),0);
-      drive_goto(10,10);
+      drive(fabs(control),0);
     }
+    drive(10,10);
     printf("%d\n", dist);
     printf("%f\n", control);
 
     prevLeftError = leftError;
     prevRightError = rightError;
-    prevLeftIntegral = leftISignal;
-    prevRightIntegral = rightISignal;
-
   }
+  int uturn = (int)round(180 * 0.284);
+  drive_goto(-uturn,uturn);
+  struct Element* reversedLinkList = NULL;
+  while (linkList != NULL) {
+    push(&reversedLinkList, linkList->data);
+    linkList = linkList->next;
+  }
+  while (reversedLinkList != NULL) {
+    int left = reversedLinkList->data;
+    reversedLinkList = reversedLinkList->next;
+    int right = reversedLinkList->data;
+    drive_goto(left,right);
+    reversedLinkList = reversedLinkList->next;
+  }
+  simulator_stopSmokeTrail();
   return 0;
 }
