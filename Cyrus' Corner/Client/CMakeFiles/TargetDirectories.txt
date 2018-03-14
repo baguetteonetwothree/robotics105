@@ -1,0 +1,8 @@
+/home/cyrus/GitHub/Client/CMakeFiles/rebuild_cache.dir
+/home/cyrus/GitHub/Client/CMakeFiles/edit_cache.dir
+/home/cyrus/GitHub/Client/src/CMakeFiles/rebuild_cache.dir
+/home/cyrus/GitHub/Client/src/CMakeFiles/client.dir
+/home/cyrus/GitHub/Client/src/CMakeFiles/edit_cache.dir
+/home/cyrus/GitHub/Client/final/CMakeFiles/rebuild_cache.dir
+/home/cyrus/GitHub/Client/final/CMakeFiles/final.dir
+/home/cyrus/GitHub/Client/final/CMakeFiles/edit_cache.dir
