@@ -8,6 +8,7 @@
 #include "ping.h"
 #include "simulator.h"
 #include "init.h"
+#include "sensors.h"
 
 //setting up map maker
 void makeMap(char direction, int x,int y ,int left, int right, int front){
@@ -27,29 +28,6 @@ void updatePos(char direction){
 // end of Hiru's corner in Cyrus' corner
 
 int square_dist = 132;
-//Test code from /Client/test/testIRSensors.c
-int getIRLeft(){
-  int irLeft = 0;
-  for(int dacVal = 0; dacVal < 160; dacVal += 8 ){
-      dac_ctr(26, 0, dacVal);
-      freqout(11, 1, 38000);
-      irLeft += input(10);
-    }
-  // printf("%i\n", irLeft);
-  return irLeft;
-
-}
-
-int getIRRight(){
-  int irRight = 0;
-  for(int dacVal = 0; dacVal < 160; dacVal += 8){
-      dac_ctr(27, 1, dacVal);
-      freqout(1, 1, 38000);
-      irRight += input(2);
-    }
-  // printf("%i\n", irRight);
-  return irRight;
-}
 
 int main (){
   init();
@@ -59,6 +37,7 @@ int main (){
   int i = 0;
   while (i<100){
     drive_goto(square_dist, square_dist);
+    int turns;
     // updatePos();
     // y++;
     switch (facing) {
@@ -75,15 +54,34 @@ int main (){
         x--;
         break;
     }
-    int IRLeft = getIRLeft();
-    int IRRight =getIRRight();
+    int IRLeft = dist("LEFT");
+    int IRRight = dist("RIGHT");
     int front = ping_cm(8);
+    if(isWallSide(IRLeft) && isWallSide(IRRight) && isWallFront(front)){
+      drive_goto(50,-49);
+      //facing = 's';
+      turns = 2;
+    }
+    if(isWallSide(IRLeft) && isWallFront(front) && !isWallSide(IRRight)){
+      drive_goto(25,-24);
+      turns = 1;
+    }
+    if(isWallSide(IRRight) && isWallFront(front) && !isWallSide(IRLeft)){
+      drive_goto(-24,25);
+      turns = -1;
+    }
+    if(isWallFront(front) && !isWallSide(IRLeft) && !isWallSide(IRRight)){
+      drive_goto(-24,25);
+    }
+
+
+
     printf("front %d\n", front);
     makeMap(facing,x,y,IRLeft, IRRight, front);
     // Turn left right code goes here
 
-    // print("Left %i" , IRLeft);
-    // print("Right %i", IRRight);
+    printf("Left %i \n" , IRLeft);
+    printf("Right %i \n", IRRight);
     i++;
 
   }
