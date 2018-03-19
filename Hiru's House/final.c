@@ -33,7 +33,7 @@ void init(){
 }
 
 //setting up map maker
-void makeMap(int x,int y,int left, int right, int front){
+void makeMap(char direction, int x,int y ,int left, int right, int front){
   if (left < 15) {
     cells[x][y].west = 1;
   } if (right < 15) {
@@ -41,10 +41,12 @@ void makeMap(int x,int y,int left, int right, int front){
   } if (front < 25) {
     cells[x][y].north = 1;
   }
-  printf("y val %d | north %d | east %d | west %d\n", y,cells[x][y].north, cells[x][y].east, cells[x][y].west);
+  printf("x val %d |y val %d | north %d | east %d | west %d\n", x,y,cells[x][y].north, cells[x][y].east, cells[x][y].west);
 }
 
+void updatePos(char direction){
 
+}
 // end of Hiru's corner in Cyrus' corner
 
 int square_dist = 132;
@@ -76,16 +78,31 @@ int main (){
   init();
   simulator_startNewSmokeTrail();
   int x = 0;
-  int y = 0;
+  int y = -1;
   int i = 0;
   while (i<100){
     drive_goto(square_dist, square_dist);
-    y++;
+    // updatePos();
+    // y++;
+    switch (facing) {
+      case 'n':
+        y++;
+        break;
+      case 'e':
+        x++;
+        break;
+      case 's':
+        y--;
+        break;
+      case 'w':
+        x--;
+        break;
+    }
     int IRLeft = getIRLeft();
     int IRRight =getIRRight();
     int front = ping_cm(8);
     printf("front %d\n", front);
-    makeMap(x,y,IRLeft, IRRight, front);
+    makeMap(facing,x,y,IRLeft, IRRight, front);
     // Turn left right code goes here
 
     // print("Left %i" , IRLeft);
