@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/final.dir/final.c.o  -o final ../src/libclient.a -lpthread 
