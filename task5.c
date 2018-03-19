@@ -133,7 +133,6 @@ int main() {
   simulator_startNewSmokeTrail();
   while (dist > STOP_DIST) {
     dist = ping_cm(8);
-
     // PID controller
     int leftError = getDistanceError(getDistanceFromWall(LEFT), LEFT);
     int rightError= getDistanceError(getDistanceFromWall(RIGHT), LEFT);

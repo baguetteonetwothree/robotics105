@@ -8,6 +8,26 @@
 #include "ping.h"
 #include "simulator.h"
 
+//Hiru's corner in Cyrus' corner
+struct mazeMap {
+  int north = 0;
+  int east = 0;
+  int south = 0;
+  int west = 0;
+};
+
+// struct cell {
+//   int x = 0;
+//   int y = 0;
+// }
+
+struct mazeMap cells[4][4];
+// struct cell routes[16];
+
+
+
+// end of Hiru's corner in Cyrus' corner
+
 int square_dist = 132;
 //Test code from /Client/test/testIRSensors.c
 int getIRLeft(){
@@ -18,6 +38,7 @@ int getIRLeft(){
       irLeft += input(10);
     }
   return irLeft;
+  printf("%i\n", irLeft);
 }
 
 int getIRRight(){
@@ -30,6 +51,8 @@ int getIRRight(){
   return irRight;
 }
 
+
+
 int main (){
     simulator_startNewSmokeTrail();
     drive_goto(square_dist, square_dist);
@@ -41,8 +64,8 @@ int main (){
         print("Right %i", IRRight);
         drive_goto(square_dist, square_dist);
         i++;
-        
+
     }
-    
+
     return 0;
 }
