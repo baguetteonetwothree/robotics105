@@ -7,7 +7,7 @@
 
 
 int dist(char WALL[]){
-    if (WALL == "LEFT"){
+    if (strcmp(WALL, "LEFT") == 0){
         int irLeft = 0;
         for(int dacVal = 0; dacVal < 160; dacVal += 8 ){
             dac_ctr(26, 0, dacVal);
@@ -16,7 +16,7 @@ int dist(char WALL[]){
         }
         // printf("%i\n", irLeft);
         return irLeft;
-    }else if(WALL =="RIGHT"){
+    }else if(strcmp(WALL,"RIGHT") == 0){
         int irRight = 0;
         for(int dacVal = 0; dacVal < 160; dacVal += 8){
             dac_ctr(27, 1, dacVal);
@@ -25,6 +25,8 @@ int dist(char WALL[]){
         }
         // printf("%i\n", irRight);
         return irRight;
+    } else {
+      printf("ERROR: Invalid signal recieved from wall sensor\n");
     }
 }
 

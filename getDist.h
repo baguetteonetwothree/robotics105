@@ -1,5 +1,3 @@
-
-
 int dist(char WALL[]){
     if (WALL == "LEFT"){
         int irLeft = 0;
@@ -21,5 +19,3 @@ int dist(char WALL[]){
         return irRight;
     }
 }
-
-

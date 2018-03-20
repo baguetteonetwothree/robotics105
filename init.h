@@ -1,6 +1,9 @@
+int square_dist = 132;
+// north -> 0, east -> 1, south -> 2, west -> 3
+int facing = 0;
+
 //creating map within program
 //if wall present then val will be 1 else 0
-char facing = 'n';
 struct mazeMap {
   int north;
   int east;

@@ -21,13 +21,13 @@ void makeMap(char direction, int x,int y ,int left, int right, int front){
   }
   printf("x val %d |y val %d | north %d | east %d | west %d\n", x,y,cells[x][y].north, cells[x][y].east, cells[x][y].west);
 }
-
-void updatePos(char direction){
-
-}
 // end of Hiru's corner in Cyrus' corner
 
-int square_dist = 132;
+
+void changeNewDirection(currentFacing, numOfTurns){
+  facing = (numOfTurns + currentFacing) % 4;
+  if (facing < 0) {facing += 4;}
+}
 
 int main (){
   init();
@@ -38,19 +38,19 @@ int main (){
   while (i<100){
     drive_goto(square_dist, square_dist);
     int turns;
-    // updatePos();
-    // y++;
+    changeNewDirection(facing, turns);
+
     switch (facing) {
-      case 'n':
+      case 0:
         y++;
         break;
-      case 'e':
+      case 1:
         x++;
         break;
-      case 's':
+      case 2:
         y--;
         break;
-      case 'w':
+      case 3:
         x--;
         break;
     }
@@ -76,12 +76,10 @@ int main (){
 
 
 
-    printf("front %d\n", front);
+    // printf("front %d\n", front);
     makeMap(facing,x,y,IRLeft, IRRight, front);
-    // Turn left right code goes here
-
-    printf("Left %i \n" , IRLeft);
-    printf("Right %i \n", IRRight);
+    // printf("Left %i \n" , IRLeft);
+    // printf("Right %i \n", IRRight);
     i++;
 
   }
