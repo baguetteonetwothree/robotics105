@@ -46,6 +46,26 @@ int main (){
     drive_goto(square_dist, square_dist);
     printf("turns %d\n", turns);
     changeNewDirection(facing, turns);
+    int IRLeft = dist("LEFT");
+    int IRRight = dist("RIGHT");
+    int front = ping_cm(8);
+    makeMap(facing,x,y,IRLeft, IRRight, front);
+    if (x == 3 && y == 3) {
+      listRec = 0;
+    }
+    
+    // add to array
+    if (listRec == 1) {
+      route[routeCount][0] = x;
+      route[routeCount][1] = y;
+      for (int i = 0; i < routeCount; i++) {
+        for (int j = 0; j < 2; j++) {
+          printf("%d ", route[i][j]);
+        }
+        printf("\n");
+      }
+      routeCount++;
+    }
 
     switch (facing) {
       case 0:
@@ -61,31 +81,10 @@ int main (){
         x--;
         break;
     }
-    int IRLeft = dist("LEFT");
-    int IRRight = dist("RIGHT");
-    int front = ping_cm(8);
 
 
-    if (x == 3 && y == 3) {
-      listRec = 0;
-    }
     // printf("%d\n", listRec);
     // printf("%d\n", facing);
-
-    makeMap(facing,x,y,IRLeft, IRRight, front);
-
-    // add to array
-    if (listRec == 1) {
-      route[routeCount][0] = x;
-      route[routeCount][1] = y;
-      for (int i = 0; i < routeCount; i++) {
-        for (int j = 0; j < 2; j++) {
-          printf("%d ", route[i][j]);
-        }
-        printf("\n");
-      }
-      routeCount++;
-    }
 
     //180 turn
     if(isWallSide(IRLeft) && isWallSide(IRRight) && isWallFront(front)){
