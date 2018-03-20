@@ -12,9 +12,9 @@
 
 //setting up map maker
 void makeMap(char direction, int x,int y ,int left, int right, int front){
-  if (left < 15) {
+  if (left < 10) {
     cells[x][y].west = 1;
-  } if (right < 15) {
+  } if (right < 10) {
     cells[x][y].east = 1;
   } if (front < 25) {
     cells[x][y].north = 1;
@@ -34,8 +34,10 @@ int main (){
   simulator_startNewSmokeTrail();
   int x = 0;
   int y = -1;
-  int i = 0;
-  while (i<100){
+  int i = 1;
+  drive_goto(33,33);
+  while (i){
+    // if at cells (3,0) get currenting facing, find the diif current and 3 change facing to 3
     drive_goto(square_dist, square_dist);
     int turns;
     changeNewDirection(facing, turns);
@@ -57,27 +59,81 @@ int main (){
     int IRLeft = dist("LEFT");
     int IRRight = dist("RIGHT");
     int front = ping_cm(8);
+
+    makeMap(facing,x,y,IRLeft, IRRight, front);
+    //180
     if(isWallSide(IRLeft) && isWallSide(IRRight) && isWallFront(front)){
-      drive_goto(50,-49);
+      //drive_goto(50,-49);
       //facing = 's';
+      printf("Left %i \n", IRLeft);
+      printf("Right %i \n", IRRight);
+      printf("Front %i \n", front);
+      drive_speed(25,-25);
+      pause(2044);
+      drive_speed(0,0);
+      pause(100);
       turns = 2;
+      continue;
     }
-    if(isWallSide(IRLeft) && isWallFront(front) && !isWallSide(IRRight)){
-      drive_goto(25,-24);
-      turns = 1;
-    }
-    if(isWallSide(IRRight) && isWallFront(front) && !isWallSide(IRLeft)){
-      drive_goto(-24,25);
+ 
+    //Turn left
+    if(isWallSide(IRRight) && !isWallFront(front) && !isWallSide(IRLeft)){
+      //drive_goto(-24,25);
+      printf("Left %i \n", IRLeft);
+      printf("Right %i \n", IRRight);
+      printf("Front %i \n", front);
+      drive_speed(-25, 25);
+      pause(1022);
+      drive_speed(0,0);
+      pause(100);
       turns = -1;
+      continue;
     }
+
+
+    //Turn left
+    if(isWallSide(IRRight) && isWallFront(front) && !isWallSide(IRLeft)){
+      //drive_goto(-24,25);
+      printf("Left %i \n", IRLeft);
+      printf("Right %i \n", IRRight);
+      printf("Front %i \n", front);
+      drive_speed(-25, 25);
+      pause(1022);
+      drive_speed(0,0);
+      pause(100);
+      turns = -1;
+      continue;
+    }
+    //Turn left
     if(isWallFront(front) && !isWallSide(IRLeft) && !isWallSide(IRRight)){
-      drive_goto(-24,25);
+      //drive_goto(-24,25);
+      printf("Left %i \n", IRLeft);
+      printf("Right %i \n", IRRight);
+      printf("Front %i \n", front);
+      drive_speed(-25, 25);
+      pause(1022);
+      drive_speed(0,0);
+      pause(100);
+      turns = -1;
+      continue;
     }
 
-
+   //Turn Right
+    if(isWallSide(IRLeft) && isWallFront(front) && !isWallSide(IRRight)){
+      //drive_goto(25,-24);
+      printf("Left %i \n", IRLeft);
+      printf("Right %i \n", IRRight);
+      printf("Front %i \n", front);
+      drive_speed(25, -25);
+      pause(1022);
+      drive_speed(0,0);
+      pause(100);
+     turns = 1;
+      continue;
+    }
 
     // printf("front %d\n", front);
-    makeMap(facing,x,y,IRLeft, IRRight, front);
+    
     // printf("Left %i \n" , IRLeft);
     // printf("Right %i \n", IRRight);
     i++;

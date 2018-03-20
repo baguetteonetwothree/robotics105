@@ -1,4 +1,4 @@
-int square_dist = 132;
+int square_dist = 122;
 // north -> 0, east -> 1, south -> 2, west -> 3
 int facing = 0;
 

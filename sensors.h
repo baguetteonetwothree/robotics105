@@ -31,7 +31,7 @@ int dist(char WALL[]){
 }
 
 int isWallSide(int distance){
-    if (distance < 15){
+    if (distance < 19){
         return 1;
     }else{
         return 0;
